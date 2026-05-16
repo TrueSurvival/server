@@ -38,18 +38,25 @@ cd /opt/minecraft
 
 echo -e "${GREEN}✅ Directories created${NC}"
 
-# Step 3: Get configuration from user
+# Step 3: Get configuration (from ENV or user input)
 echo -e "\n${YELLOW}Step 3: Configuration Setup${NC}"
-echo -e "${BLUE}Please provide the following information:${NC}"
 
-read -p "$(echo -e ${BLUE}Telegram Bot Token (from BotFather): ${NC})" TG_TOKEN
-read -p "$(echo -e ${BLUE}Telegram Chat ID (group/forum): ${NC})" TG_CHAT_ID
-read -p "$(echo -e ${BLUE}CHAT Topic ID (default 6): ${NC})" CHAT_TOPIC_ID
-CHAT_TOPIC_ID=${CHAT_TOPIC_ID:-6}
-read -p "$(echo -e ${BLUE}LOG Topic ID (default 9555): ${NC})" LOG_TOPIC_ID
-LOG_TOPIC_ID=${LOG_TOPIC_ID:-9555}
-read -p "$(echo -e ${BLUE}Your Admin Telegram User ID: ${NC})" ADMIN_IDS
-read -p "$(echo -e ${BLUE}RCON Password (for server.properties): ${NC})" RCON_PASSWORD
+# Check if all required env vars are set
+if [[ -n "$TG_TOKEN" ]] && [[ -n "$TG_CHAT_ID" ]] && [[ -n "$ADMIN_IDS" ]] && [[ -n "$RCON_PASSWORD" ]]; then
+    echo -e "${GREEN}🤖 Using environment variables (AUTOMATIC MODE)${NC}"
+    CHAT_TOPIC_ID=${CHAT_TOPIC_ID:-6}
+    LOG_TOPIC_ID=${LOG_TOPIC_ID:-9555}
+else
+    echo -e "${BLUE}📋 Interactive mode - please provide information:${NC}"
+    [[ -z "$TG_TOKEN" ]] && read -p "$(echo -e ${BLUE}Telegram Bot Token (from BotFather): ${NC})" TG_TOKEN
+    [[ -z "$TG_CHAT_ID" ]] && read -p "$(echo -e ${BLUE}Telegram Chat ID (group/forum): ${NC})" TG_CHAT_ID
+    read -p "$(echo -e ${BLUE}CHAT Topic ID (default 6): ${NC})" CHAT_TOPIC_ID || CHAT_TOPIC_ID=6
+    CHAT_TOPIC_ID=${CHAT_TOPIC_ID:-6}
+    read -p "$(echo -e ${BLUE}LOG Topic ID (default 9555): ${NC})" LOG_TOPIC_ID || LOG_TOPIC_ID=9555
+    LOG_TOPIC_ID=${LOG_TOPIC_ID:-9555}
+    [[ -z "$ADMIN_IDS" ]] && read -p "$(echo -e ${BLUE}Your Admin Telegram User ID: ${NC})" ADMIN_IDS
+    [[ -z "$RCON_PASSWORD" ]] && read -p "$(echo -e ${BLUE}RCON Password (for server.properties): ${NC})" RCON_PASSWORD
+fi
 
 # Step 4: Create .env file
 echo -e "\n${YELLOW}Step 4: Creating .env configuration...${NC}"
@@ -197,19 +204,27 @@ echo -e "${GREEN}✅ Systemd services created${NC}"
 
 # Step 10: Configure rclone (optional)
 echo -e "\n${YELLOW}Step 10: Google Drive Backup Setup (Optional)${NC}"
-read -p "Do you want to setup Google Drive backups? (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Running: rclone config"
-    echo "Make sure to:"
-    echo "1. Choose 'N' (new remote)"
-    echo "2. Name it 'gdrive'"
-    echo "3. Choose 'Google Drive' (option 13 or similar)"
-    echo "4. Follow OAuth authentication"
-    rclone config
-    echo -e "${GREEN}✅ rclone configured${NC}"
-else
+
+# Check for AUTO_RCLONE env var or ask user
+if [[ "$AUTO_RCLONE" == "true" ]]; then
+    echo -e "${GREEN}🤖 Skipping rclone setup (AUTO_RCLONE=true). Configure manually later.${NC}"
+elif [[ "$AUTO_RCLONE" == "skip" ]]; then
     echo -e "${YELLOW}⚠️ Skipping Google Drive setup. Update BACKUP_REMOTE in .env later.${NC}"
+else
+    read -p "Do you want to setup Google Drive backups? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Running: rclone config"
+        echo "Make sure to:"
+        echo "1. Choose 'N' (new remote)"
+        echo "2. Name it 'gdrive'"
+        echo "3. Choose 'Google Drive' (option 13 or similar)"
+        echo "4. Follow OAuth authentication"
+        rclone config
+        echo -e "${GREEN}✅ rclone configured${NC}"
+    else
+        echo -e "${YELLOW}⚠️ Skipping Google Drive setup. Update BACKUP_REMOTE in .env later.${NC}"
+    fi
 fi
 
 # Step 11: Enable and start services

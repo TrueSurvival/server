@@ -37,10 +37,26 @@ chmod +x scripts/setup.sh
 - Create systemd services
 - Start server automatically
 
-⏱️ **Time:** ~2-3 minutes | 📝 **Questions:** 5 interactive prompts
+⏱️ **Time:** ~2-3 minutes | 📝 **Prompts:** 5 interactive questions
 
-### **Option 2: Manual Setup**
-See [📘 QUICK_START.md](docs/QUICK_START.md) for step-by-step instructions.
+### **Option 2: Fully Automatic (CI/CD Ready)**
+```bash
+export TG_TOKEN="your_token" TG_CHAT_ID="-1001234567890" \
+       ADMIN_IDS="123456789" RCON_PASSWORD="password" AUTO_RCLONE="skip"
+
+sudo -E bash scripts/setup.sh
+```
+
+**Zero user interaction - perfect for:**
+- Docker containers
+- Kubernetes deployments
+- GitHub Actions CI/CD
+- Infrastructure-as-Code
+
+See [AUTOMATIC_SETUP.md](AUTOMATIC_SETUP.md) for full details.
+
+### **Option 3: Manual Setup**
+See [📘 docs/QUICK_START.md](docs/QUICK_START.md) for step-by-step instructions.
 
 ---
 
