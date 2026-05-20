@@ -65,6 +65,41 @@ class MinecraftServerAPI:
             # Fallback
             return {"current": self.player_count, "max": 20}
     
+    def get_player_list(self):
+        """Get list of online players"""
+        try:
+            mcr = MCRcon(self.host, self.rcon_password, port=self.rcon_port)
+            mcr.connect()
+            response = mcr.command("list")
+            
+            # Parse player names: "There are X of a max of Y players online: name1, name2, ..."
+            if ":" in response:
+                players_str = response.split(":")[-1].strip()
+                if players_str:
+                    return [p.strip() for p in players_str.split(",")]
+            return []
+        except:
+            return []
+    
+    def get_tps(self):
+        """Get server TPS (ticks per second) via Spark"""
+        try:
+            mcr = MCRcon(self.host, self.rcon_password, port=self.rcon_port)
+            mcr.connect()
+            response = mcr.command("spark tps")
+            
+            # Extract TPS numbers
+            match = re.search(r'(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)\s*\/\s*(\d+\.?\d*)', response)
+            if match:
+                return {
+                    "1min": float(match.group(1)),
+                    "5min": float(match.group(2)),
+                    "15min": float(match.group(3))
+                }
+            return {"1min": 20, "5min": 20, "15min": 20}
+        except:
+            return {"1min": 20, "5min": 20, "15min": 20}
+    
     def get_memory_usage(self):
         """Get server memory and CPU usage"""
         try:
@@ -147,6 +182,8 @@ class MinecraftServerAPI:
         worlds = self.get_world_size()
         uptime = self.get_uptime()
         players = self.get_player_count()
+        player_list = self.get_player_list()
+        tps = self.get_tps()
         
         return {
             "timestamp": datetime.now().isoformat(),
@@ -157,9 +194,11 @@ class MinecraftServerAPI:
                 "port": 25565,
                 "players": players["current"],
                 "max_players": players["max"],
+                "player_list": player_list,
                 "uptime": uptime,
                 "memory": memory["memory"],
-                "cpu": memory["cpu"]
+                "cpu": memory["cpu"],
+                "tps": tps
             },
             "worlds": worlds,
             "motd": "Minecraft Survival Server"
@@ -178,6 +217,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.send_json_response({"logs": self.api.get_logs()})
             elif self.path == '/api/ping':
                 self.send_json_response({"status": "pong"})
+            elif self.path == '/api/players':
+                self.send_json_response({
+                    "players": self.api.get_player_list(),
+                    "count": self.api.get_player_count()
+                })
+            elif self.path == '/api/tps':
+                self.send_json_response({"tps": self.api.get_tps()})
             elif self.path == '/' or self.path == '/index.html':
                 # Serve main HTML
                 self.serve_file('/opt/minecraft/web/index.html', 'text/html')
