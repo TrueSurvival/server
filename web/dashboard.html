@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MC.SODOPS.UZ</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        :root {
+            --nether-black: #0a0e27;
+            --deep-slate: #12131a;
+            --charcoal: #1a1b2e;
+            --diamond-blue: #00f0ff;
+            --gold: #ffaa00;
+            --emerald: #2ecc71;
+            --text-light: #e8eaed;
+            --text-muted: #a0a5b8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--nether-black) 0%, var(--deep-slate) 50%, #0f1025 100%);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+        
+        .glass {
+            background: rgba(18, 19, 26, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-premium {
+            background: rgba(18, 19, 26, 0.5);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-premium:hover {
+            border-color: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, var(--diamond-blue) 0%, var(--gold) 50%, var(--emerald) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--emerald);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .chart-bar {
+            height: 100%;
+            background: linear-gradient(180deg, var(--diamond-blue), rgba(0, 240, 255, 0.3));
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: slideIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 glass">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                    <div class="text-2xl">⛏️</div>
+                    <h1 class="text-xl font-bold text-gradient">MC.SODOPS.UZ</h1>
+                </a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="text-text-muted hover:text-diamond-blue transition">Back to Home</a>
+                <button id="refreshBtn" class="glass px-4 py-2 rounded-lg text-sm border border-diamond-blue/30 hover:border-diamond-blue/60 transition">
+                    🔄 Refresh
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="pt-24 pb-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="mb-12">
+                <h1 class="text-5xl md:text-6xl font-black text-gradient mb-2">Server Dashboard</h1>
+                <p class="text-text-muted text-lg">Real-time monitoring and analytics</p>
+            </div>
+
+            <!-- Top Stats -->
+            <div class="grid md:grid-cols-4 gap-6 mb-6 animate-in">
+                <!-- Players -->
+                <div class="card-premium p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-text-muted text-sm uppercase font-semibold tracking-wider">Players Online</h3>
+                        <span class="text-2xl">👥</span>
+                    </div>
+                    <div class="text-4xl font-black text-diamond-blue mb-2" id="playersCount">1</div>
+                    <div class="text-sm text-text-muted">out of 20 max</div>
+                </div>
+
+                <!-- Memory -->
+                <div class="card-premium p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-text-muted text-sm uppercase font-semibold tracking-wider">Memory</h3>
+                        <span class="text-2xl">💾</span>
+                    </div>
+                    <div class="text-4xl font-black text-gold mb-2" id="memoryUsage">1.2</div>
+                    <div class="text-sm text-text-muted">GB / 2 GB</div>
+                </div>
+
+                <!-- CPU -->
+                <div class="card-premium p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-text-muted text-sm uppercase font-semibold tracking-wider">CPU Load</h3>
+                        <span class="text-2xl">⚡</span>
+                    </div>
+                    <div class="text-4xl font-black text-emerald mb-2" id="cpuLoad">2.5</div>
+                    <div class="text-sm text-text-muted">percent</div>
+                </div>
+
+                <!-- Uptime -->
+                <div class="card-premium p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-text-muted text-sm uppercase font-semibold tracking-wider">Server Uptime</h3>
+                        <span class="text-2xl">⏱️</span>
+                    </div>
+                    <div class="text-4xl font-black text-diamond-blue mb-2" id="uptime">5d</div>
+                    <div class="text-sm text-text-muted">days running</div>
+                </div>
+            </div>
+
+            <!-- Status & Performance -->
+            <div class="grid lg:grid-cols-3 gap-6 mb-6">
+                <!-- Server Status -->
+                <div class="lg:col-span-2 card-premium p-8 animate-in">
+                    <h2 class="text-2xl font-bold text-white mb-8">Server Information</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="glass p-6 rounded-lg border border-diamond-blue/20">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-muted text-sm mb-1">Status</p>
+                                    <p class="text-white font-semibold">Online & Running</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="status-dot"></span>
+                                    <span class="text-emerald font-bold">ACTIVE</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="glass p-4 rounded-lg border border-gold/20">
+                                <p class="text-text-muted text-xs mb-1">Version</p>
+                                <p class="text-white font-semibold">Paper 1.21.11-131</p>
+                            </div>
+                            <div class="glass p-4 rounded-lg border border-emerald/20">
+                                <p class="text-text-muted text-xs mb-1">Location</p>
+                                <p class="text-white font-semibold">NYC Data Center</p>
+                            </div>
+                            <div class="glass p-4 rounded-lg border border-diamond-blue/20">
+                                <p class="text-text-muted text-xs mb-1">Java Version</p>
+                                <p class="text-white font-semibold">Java 21</p>
+                            </div>
+                            <div class="glass p-4 rounded-lg border border-gold/20">
+                                <p class="text-text-muted text-xs mb-1">Difficulty</p>
+                                <p class="text-white font-semibold">Normal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card-premium p-8 animate-in">
+                    <h2 class="text-2xl font-bold text-white mb-8">Connection</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-text-muted text-xs mb-2">Server Address</p>
+                            <div class="glass px-4 py-3 rounded-lg font-mono text-sm text-diamond-blue border border-diamond-blue/30 break-all">
+                                mc.sodops.uz
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-text-muted text-xs mb-2">Port</p>
+                            <div class="glass px-4 py-3 rounded-lg font-mono text-sm text-gold border border-gold/30">
+                                25565
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-text-muted text-xs mb-2">IP Address</p>
+                            <div class="glass px-4 py-3 rounded-lg font-mono text-sm text-emerald border border-emerald/30 break-all">
+                                64.225.111.191
+                            </div>
+                        </div>
+                        <button class="w-full glass px-4 py-3 rounded-lg text-sm font-semibold text-diamond-blue border border-diamond-blue/50 hover:border-diamond-blue/80 transition">
+                            📋 Copy Address
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts & Graphs -->
+            <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                <!-- Performance Chart -->
+                <div class="card-premium p-8 animate-in">
+                    <h2 class="text-xl font-bold text-white mb-6">Performance (Last 10 Minutes)</h2>
+                    
+                    <div class="flex items-end gap-2 h-48">
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 40%"></div>
+                            <span class="text-xs text-text-muted mt-2">0m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 55%"></div>
+                            <span class="text-xs text-text-muted mt-2">1m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 70%"></div>
+                            <span class="text-xs text-text-muted mt-2">2m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 45%"></div>
+                            <span class="text-xs text-text-muted mt-2">3m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 60%"></div>
+                            <span class="text-xs text-text-muted mt-2">4m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 50%"></div>
+                            <span class="text-xs text-text-muted mt-2">5m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 75%"></div>
+                            <span class="text-xs text-text-muted mt-2">6m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 55%"></div>
+                            <span class="text-xs text-text-muted mt-2">7m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 65%"></div>
+                            <span class="text-xs text-text-muted mt-2">8m</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="chart-bar" style="height: 48%"></div>
+                            <span class="text-xs text-text-muted mt-2">9m</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- World Stats -->
+                <div class="card-premium p-8 animate-in">
+                    <h2 class="text-xl font-bold text-white mb-6">World Statistics</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-text-muted">Overworld</span>
+                                <span class="text-sm font-semibold text-diamond-blue">2.4 GB</span>
+                            </div>
+                            <div class="bg-nether-black/40 rounded-full h-2 overflow-hidden border border-diamond-blue/20">
+                                <div class="bg-gradient-to-r from-diamond-blue to-cyan-400 h-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-text-muted">Nether</span>
+                                <span class="text-sm font-semibold text-gold">450 MB</span>
+                            </div>
+                            <div class="bg-nether-black/40 rounded-full h-2 overflow-hidden border border-gold/20">
+                                <div class="bg-gradient-to-r from-gold to-yellow-300 h-full" style="width: 35%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm text-text-muted">The End</span>
+                                <span class="text-sm font-semibold text-emerald">320 MB</span>
+                            </div>
+                            <div class="bg-nether-black/40 rounded-full h-2 overflow-hidden border border-emerald/20">
+                                <div class="bg-gradient-to-r from-emerald to-green-300 h-full" style="width: 25%"></div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-diamond-blue/10 pt-4 mt-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-muted text-sm">Total Size</span>
+                                <span class="text-white font-bold text-lg">3.17 GB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Logs -->
+            <div class="card-premium p-8 animate-in">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">Live Server Logs</h2>
+                    <button id="autoScrollBtn" class="text-xs glass px-3 py-2 rounded border border-diamond-blue/30 hover:border-diamond-blue/60 transition">
+                        🔄 Auto-scroll
+                    </button>
+                </div>
+                
+                <div class="bg-nether-black/60 rounded-lg p-6 font-mono text-xs space-y-1 max-h-96 overflow-y-auto border border-diamond-blue/10" id="logsContainer">
+                    <div class="text-emerald">[INFO] 14:35:22 - Sodiq joined the game</div>
+                    <div class="text-text-muted">[LOG] 14:35:25 - Server running at 20.0 TPS</div>
+                    <div class="text-text-muted">[LOG] 14:35:30 - Memory: 1.2GB / 2GB used</div>
+                    <div class="text-emerald">[INFO] 14:35:35 - Server auto-save completed</div>
+                    <div class="text-text-muted">[LOG] 14:35:40 - 1 players online</div>
+                    <div class="text-text-muted">[LOG] 14:35:45 - Autosave triggered</div>
+                    <div class="text-text-muted">[LOG] 14:35:50 - World saved to disk</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // Auto-refresh functionality
+        document.getElementById('refreshBtn').addEventListener('click', () => {
+            location.reload();
+        });
+
+        // Auto-scroll logs
+        let autoScroll = true;
+        document.getElementById('autoScrollBtn').addEventListener('click', function() {
+            autoScroll = !autoScroll;
+            this.style.opacity = autoScroll ? '1' : '0.5';
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            if (autoScroll) {
+                const logsContainer = document.getElementById('logsContainer');
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+            }
+        }, 1000);
+
+        // Update stats (would connect to API)
+        function updateStats() {
+            const stats = [
+                { id: 'playersCount', value: Math.floor(Math.random() * 5), suffix: '' },
+                { id: 'memoryUsage', value: (Math.random() * 0.5 + 1).toFixed(1), suffix: '' },
+                { id: 'cpuLoad', value: (Math.random() * 5).toFixed(1), suffix: '' },
+                { id: 'uptime', value: '5d', suffix: '' }
+            ];
+
+            stats.forEach(stat => {
+                const el = document.getElementById(stat.id);
+                if (el) el.textContent = stat.value + stat.suffix;
+            });
+        }
+
+        updateStats();
+        // setInterval(updateStats, 5000);
+    </script>
+</body>
+</html>

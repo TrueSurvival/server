@@ -24,7 +24,7 @@ fi
 # Step 1: Install dependencies
 echo -e "\n${YELLOW}Step 1: Installing dependencies...${NC}"
 apt update
-apt install -y openjdk-21-jre-headless git python3 python3-pip rclone zip curl wget
+apt install -y openjdk-21-jre-headless git python3 python3-pip python3-dotenv rclone zip curl wget
 pip3 install mcrcon python-telegram-bot --break-system-packages
 
 echo -e "${GREEN}✅ Dependencies installed${NC}"
@@ -72,11 +72,18 @@ LOG_TOPIC_ID=${LOG_TOPIC_ID}
 RCON_HOST=localhost
 RCON_PORT=25575
 RCON_PASSWORD=${RCON_PASSWORD}
+MC_PORT=25565
 
 # Server Configuration
+SERVER_PATH=/opt/minecraft/server-2
 LOG_FILE=/opt/minecraft/server-2/logs/latest.log
 MINECRAFT_SERVICE=minecraft
 ADMIN_IDS=${ADMIN_IDS}
+
+# Web Server Configuration
+WEB_PORT=8090
+WEB_PATH=/opt/minecraft/web
+WEB_HOST=0.0.0.0
 
 # Backup Configuration
 BACKUP_SCRIPT=/opt/minecraft/backup.sh
@@ -199,6 +206,27 @@ RestartSec=5
 WantedBy=multi-user.target
 SVCEOF
 
+# Create mc-web.service
+cat > /etc/systemd/system/mc-web.service <<'SVCEOF'
+[Unit]
+Description=Minecraft Server Web Portal
+After=network.target
+Wants=minecraft.service
+
+[Service]
+Type=simple
+User=minecraft
+WorkingDirectory=/opt/minecraft
+ExecStart=/usr/bin/python3 /opt/minecraft/web_server.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+SVCEOF
+
 systemctl daemon-reload
 echo -e "${GREEN}✅ Systemd services created${NC}"
 
@@ -229,10 +257,11 @@ fi
 
 # Step 11: Enable and start services
 echo -e "\n${YELLOW}Step 11: Enabling and starting services...${NC}"
-systemctl enable minecraft.service mc-tgbridge.service
+systemctl enable minecraft.service mc-tgbridge.service mc-web.service
 systemctl start minecraft.service
 sleep 5
 systemctl start mc-tgbridge.service
+systemctl start mc-web.service
 
 echo -e "${GREEN}✅ Services started${NC}"
 
