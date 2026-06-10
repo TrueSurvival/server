@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MC.SODOPS.UZ - Premium Minecraft Server Portal">
+    <meta name="theme-color" content="#00f0ff">
+    <title>MC.SODOPS.UZ - Premium Minecraft Server</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        :root {
+            --nether-black: #0a0e27;
+            --deep-slate: #12131a;
+            --charcoal: #1a1b2e;
+            --diamond-blue: #00f0ff;
+            --gold: #ffaa00;
+            --emerald: #2ecc71;
+            --text-light: #e8eaed;
+            --text-muted: #a0a5b8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--nether-black) 0%, var(--deep-slate) 50%, #0f1025 100%);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+        
+        /* Glassmorphism Background */
+        .glass {
+            background: rgba(18, 19, 26, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glass-light {
+            background: rgba(26, 27, 46, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 240, 255, 0.05);
+        }
+        
+        /* Neon Glow Effects */
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+        
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+        }
+        
+        /* Gradient Borders */
+        .gradient-border {
+            background: linear-gradient(var(--nether-black), var(--deep-slate)) padding-box,
+                        linear-gradient(135deg, var(--diamond-blue), var(--emerald)) border-box;
+            border: 2px solid transparent;
+        }
+        
+        /* Smooth Transitions */
+        .transition-smooth {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Minecraft Premium Button */
+        .btn-premium {
+            background: linear-gradient(135deg, var(--diamond-blue), #00d9ff);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .btn-premium:hover::before {
+            left: 100%;
+        }
+        
+        .btn-premium:hover {
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), inset 0 0 30px rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* Outlined Button */
+        .btn-outlined {
+            border: 2px solid var(--diamond-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-outlined::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 240, 255, 0.1);
+            transition: left 0.4s;
+        }
+        
+        .btn-outlined:hover::before {
+            left: 0;
+        }
+        
+        .btn-outlined:hover {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+        
+        /* Premium Card */
+        .card-premium {
+            background: rgba(18, 19, 26, 0.5);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--diamond-blue), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .card-premium:hover::before {
+            opacity: 1;
+        }
+        
+        .card-premium:hover {
+            border-color: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(0, 240, 255, 0.6);
+            }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+        
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(135deg, var(--diamond-blue) 0%, var(--gold) 50%, var(--emerald) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Minecraft Grid Background */
+        .minecraft-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .minecraft-bg::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 240, 255, 0.03) 2px,
+                    rgba(0, 240, 255, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 240, 255, 0.03) 2px,
+                    rgba(0, 240, 255, 0.03) 4px
+                );
+            animation: drift 20s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+        
+        .minecraft-bg > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Feature Icons */
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(46, 204, 113, 0.2));
+            border-radius: 16px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            font-size: 28px;
+        }
+        
+        /* Status Indicator */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--emerald);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .minecraft-bg::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="minecraft-bg">
+    <!-- Navigation Header -->
+    <header class="fixed top-0 w-full z-50 glass">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="text-2xl">⛏️</div>
+                <h1 class="text-xl font-bold text-gradient">MC.SODOPS.UZ</h1>
+            </div>
+            <ul class="hidden md:flex gap-8 items-center">
+                <li><a href="#home" class="nav-link text-text-muted hover:text-diamond-blue transition-smooth">Home</a></li>
+                <li><a href="#features" class="nav-link text-text-muted hover:text-diamond-blue transition-smooth">Features</a></li>
+                <li><a href="#dashboard" class="nav-link text-text-muted hover:text-diamond-blue transition-smooth">Dashboard</a></li>
+                <li><button id="themeToggle" class="glass px-4 py-2 rounded-lg text-sm border border-diamond-blue/30 hover:border-diamond-blue/60 transition-smooth">🌙 Dark</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20 px-4">
+        <div class="max-w-5xl mx-auto text-center">
+            <!-- Floating Badge -->
+            <div class="mb-8 inline-block glass px-6 py-3 rounded-full border border-diamond-blue/30">
+                <div class="flex items-center gap-2">
+                    <span class="status-dot"></span>
+                    <span class="text-sm text-diamond-blue font-medium">Server Online • 24/7 Uptime</span>
+                </div>
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="text-6xl md:text-8xl font-black font-montserrat mb-6 text-gradient glow-text leading-tight">
+                Minecraft Server Portal
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-xl md:text-2xl text-text-muted mb-12 max-w-2xl mx-auto leading-relaxed">
+                Real-time monitoring, live dashboard, and advanced server management. Professional hosting from the Nether to the End.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+                <a href="dashboard.html" class="btn-premium px-8 py-4 rounded-lg font-semibold text-nether-black transition-smooth group inline-block">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        📊 Go to Dashboard
+                        <svg class="w-5 h-5 group-hover:translate-x-2 transition-smooth" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </span>
+                </a>
+                <button class="btn-outlined px-8 py-4 rounded-lg font-semibold text-diamond-blue transition-smooth group">
+                    <span class="flex items-center justify-center gap-2">
+                        📚 Documentation
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-smooth" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto">
+                <div class="glass px-6 py-4 rounded-xl border border-diamond-blue/20">
+                    <div class="text-3xl font-bold text-diamond-blue">1</div>
+                    <div class="text-sm text-text-muted mt-2">Players Online</div>
+                </div>
+                <div class="glass px-6 py-4 rounded-xl border border-gold/20">
+                    <div class="text-3xl font-bold text-gold">20</div>
+                    <div class="text-sm text-text-muted mt-2">Max Players</div>
+                </div>
+                <div class="glass px-6 py-4 rounded-xl border border-emerald/20">
+                    <div class="text-3xl font-bold text-emerald">99.9%</div>
+                    <div class="text-sm text-text-muted mt-2">Uptime</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-diamond-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl md:text-6xl font-black font-montserrat mb-4 text-gradient">Premium Features</h2>
+                <p class="text-xl text-text-muted max-w-2xl mx-auto">Everything you need to manage your Minecraft server like a pro</p>
+            </div>
+
+            <!-- Feature Cards Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">🟢</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Real-time Status</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">Live server monitoring with instant updates every 5 seconds. Always know what's happening.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">📋</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Live Logs</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">Stream server logs in real-time with syntax highlighting and advanced filtering options.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">💾</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Memory Tracking</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">Monitor RAM usage, CPU load, and world sizes. Optimize your server performance instantly.</p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">🎨</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Theme Toggle</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">Switch between dark and light themes. Eye-friendly interface for day and night sessions.</p>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">🔌</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Player Management</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">Real-time player tracking via RCON protocol. See who's online instantly with precision.</p>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">⚡</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Performance Metrics</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">Detailed analytics on server performance. TPS, RAM, CPU - everything at your fingertips.</p>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">📡</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">API Integration</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">RESTful API endpoints for custom integrations. Build your own tools on top of our platform.</p>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="card-premium p-8 group">
+                    <div class="icon-box mb-6 group-hover:scale-110 transition-smooth">🔐</div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Security First</h3>
+                    <p class="text-text-muted text-sm leading-relaxed">Enterprise-grade security with RCON encryption. Your server data is always protected.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Server Info Section -->
+    <section class="py-24 px-4 bg-gradient-to-b from-transparent via-nether-black/50 to-transparent">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Left Content -->
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-black font-montserrat mb-8 text-gradient">Server Information</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="glass p-6 rounded-xl border border-diamond-blue/20">
+                            <div class="flex items-start gap-4">
+                                <div class="text-2xl">🖥️</div>
+                                <div>
+                                    <h3 class="font-bold text-white mb-1">Paper 1.21.11</h3>
+                                    <p class="text-text-muted text-sm">Latest stable build with performance optimization</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass p-6 rounded-xl border border-gold/20">
+                            <div class="flex items-start gap-4">
+                                <div class="text-2xl">💾</div>
+                                <div>
+                                    <h3 class="font-bold text-white mb-1">2GB RAM Dedicated</h3>
+                                    <p class="text-text-muted text-sm">Optimized for smooth gameplay with minimal lag</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass p-6 rounded-xl border border-emerald/20">
+                            <div class="flex items-start gap-4">
+                                <div class="text-2xl">⚡</div>
+                                <div>
+                                    <h3 class="font-bold text-white mb-1">NYC Data Center</h3>
+                                    <p class="text-text-muted text-sm">Ultra-fast connection with global reach</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Content - Connection Info -->
+                <div>
+                    <div class="card-premium p-12 border-2 border-diamond-blue/30 pulse-glow">
+                        <h3 class="text-2xl font-bold mb-8 text-diamond-blue">Join Server</h3>
+                        
+                        <div class="mb-8">
+                            <p class="text-text-muted text-sm mb-3 uppercase tracking-wider">Server Address</p>
+                            <div class="glass px-6 py-4 rounded-lg border border-diamond-blue/50 font-mono text-white break-all">
+                                mc.sodops.uz:25565
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <p class="text-text-muted text-sm mb-3 uppercase tracking-wider">IP Address</p>
+                            <div class="glass px-6 py-4 rounded-lg border border-diamond-blue/50 font-mono text-white break-all">
+                                64.225.111.191:25565
+                            </div>
+                        </div>
+
+                        <button class="btn-premium w-full py-4 rounded-lg font-semibold text-nether-black transition-smooth">
+                            📋 Copy Address
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section id="dashboard" class="py-24 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl md:text-6xl font-black font-montserrat mb-4 text-gradient">Live Dashboard</h2>
+                <p class="text-xl text-text-muted max-w-2xl mx-auto">Monitor your server in real-time with our professional dashboard</p>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="grid lg:grid-cols-3 gap-6 mb-6">
+                <!-- Status Card -->
+                <div class="lg:col-span-2 card-premium p-8">
+                    <div class="flex items-center justify-between mb-8">
+                        <h3 class="text-2xl font-bold text-white">Server Status</h3>
+                        <div class="flex items-center gap-2 glass px-4 py-2 rounded-lg">
+                            <span class="status-dot"></span>
+                            <span class="text-sm text-emerald font-medium">ONLINE</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="glass px-6 py-6 rounded-lg text-center border border-diamond-blue/20">
+                            <div class="text-3xl font-bold text-diamond-blue mb-2">1/20</div>
+                            <div class="text-sm text-text-muted">Players Online</div>
+                        </div>
+                        <div class="glass px-6 py-6 rounded-lg text-center border border-gold/20">
+                            <div class="text-3xl font-bold text-gold mb-2">1.2GB</div>
+                            <div class="text-sm text-text-muted">RAM Usage</div>
+                        </div>
+                        <div class="glass px-6 py-6 rounded-lg text-center border border-emerald/20">
+                            <div class="text-3xl font-bold text-emerald mb-2">2.5%</div>
+                            <div class="text-sm text-text-muted">CPU Load</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card-premium p-8">
+                    <h3 class="text-xl font-bold text-white mb-6">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full glass px-4 py-3 rounded-lg text-sm font-medium text-diamond-blue border border-diamond-blue/30 hover:border-diamond-blue/60 transition-smooth text-left">
+                            ⚙️ Server Settings
+                        </button>
+                        <button class="w-full glass px-4 py-3 rounded-lg text-sm font-medium text-gold border border-gold/30 hover:border-gold/60 transition-smooth text-left">
+                            💾 Backup Now
+                        </button>
+                        <button class="w-full glass px-4 py-3 rounded-lg text-sm font-medium text-emerald border border-emerald/30 hover:border-emerald/60 transition-smooth text-left">
+                            📊 View Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Logs Section -->
+            <div class="card-premium p-8">
+                <h3 class="text-xl font-bold text-white mb-6">Live Server Logs</h3>
+                <div class="bg-nether-black/60 rounded-lg p-6 font-mono text-sm space-y-2 max-h-64 overflow-y-auto border border-diamond-blue/10">
+                    <div class="text-emerald">[INFO] Sodiq joined the game</div>
+                    <div class="text-text-muted">[LOG] Server running at 20.0 TPS</div>
+                    <div class="text-text-muted">[LOG] Memory: 1.2GB / 2GB used</div>
+                    <div class="text-emerald">[INFO] Server auto-save completed</div>
+                    <div class="text-text-muted">[LOG] 0 players online</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-diamond-blue/10 glass py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-white font-bold mb-4">⛏️ MC.SODOPS.UZ</h4>
+                    <p class="text-text-muted text-sm">Premium Minecraft server portal with real-time monitoring</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-text-muted">
+                        <li><a href="#home" class="hover:text-diamond-blue transition-smooth">Home</a></li>
+                        <li><a href="#features" class="hover:text-diamond-blue transition-smooth">Features</a></li>
+                        <li><a href="#dashboard" class="hover:text-diamond-blue transition-smooth">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Technology</h4>
+                    <ul class="space-y-2 text-sm text-text-muted">
+                        <li><a href="#" class="hover:text-diamond-blue transition-smooth">Paper MC</a></li>
+                        <li><a href="#" class="hover:text-diamond-blue transition-smooth">Python Backend</a></li>
+                        <li><a href="#" class="hover:text-diamond-blue transition-smooth">Tailwind CSS</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Status</h4>
+                    <div class="flex items-center gap-2">
+                        <span class="status-dot"></span>
+                        <span class="text-sm text-emerald">All Systems Online</span>
+                    </div>
+                    <p class="text-text-muted text-sm mt-2">99.9% Uptime</p>
+                </div>
+            </div>
+
+            <div class="border-t border-diamond-blue/10 pt-8 text-center text-text-muted text-sm">
+                <p>&copy; 2025-2026 MC.SODOPS.UZ | Built with ❤️ by Sodiq | Premium Minecraft Server Portal</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            this.textContent = document.documentElement.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
+        });
+
+        // Copy to clipboard
+        document.querySelectorAll('[class*="font-mono"]').forEach(el => {
+            el.addEventListener('click', () => {
+                navigator.clipboard.writeText(el.textContent);
+                const btn = el.closest('.card-premium')?.querySelector('button');
+                if (btn) {
+                    btn.textContent = '✅ Copied!';
+                    setTimeout(() => btn.textContent = '📋 Copy Address', 2000);
+                }
+            });
+        });
+
+        // Real-time updates (would connect to actual API)
+        setInterval(() => {
+            // Update player count, memory, etc
+            console.log('Updating server status...');
+        }, 5000);
+    </script>
+</body>
+</html>
