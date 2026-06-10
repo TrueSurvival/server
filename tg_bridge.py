@@ -871,6 +871,8 @@ async def tg_to_mc(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def mc_to_tg(bot: Bot):
     chat_pattern = re.compile(r'\[.*?INFO\].*?<([^>]+)> (.+)')
+    join_pattern = re.compile(r'\[.*?INFO\].*?([a-zA-Z0-9_]+) joined the game')
+    leave_pattern = re.compile(r'\[.*?INFO\].*?([a-zA-Z0-9_]+) lost connection: (.+)')
 
     f = None
     watched_inode = None
@@ -909,6 +911,21 @@ async def mc_to_tg(bot: Bot):
             clean_line = strip_log_prefix(line)
             if should_forward_log(clean_line):
                 await send(bot, f" {clean_line}", topic_id=LOG_TOPIC_ID)
+
+            # Player join notification -> 6-chi topic'ga yuborish
+            if m := join_pattern.search(line):
+                player = m.group(1)
+                msg = f"✅ {player} serverga kirdi"
+                logging.info(f"Forwarding join to Telegram topic 6: {player}")
+                await send(bot, msg, topic_id=CHAT_TOPIC_ID)
+
+            # Player leave notification -> 6-chi topic'ga yuborish
+            if m := leave_pattern.search(line):
+                player = m.group(1)
+                reason = m.group(2).strip() if m.group(2) else "Disconnected"
+                msg = f"❌ {player} serverdan chiqdi ({reason})"
+                logging.info(f"Forwarding leave to Telegram topic 6: {player}")
+                await send(bot, msg, topic_id=CHAT_TOPIC_ID)
 
             if m := chat_pattern.search(line):
                 player = m.group(1)

@@ -70,3 +70,11 @@ Thumbs.db
 
 # Misc
 TROUBLESHOOTING.md
+
+# Node modules
+node_modules/
+afk-bot/node_modules/
+afk-bot2/node_modules/
+
+# Node binaries
+node/

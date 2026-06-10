@@ -1,0 +1,198 @@
+╔════════════════════════════════════════════════════════════════╗
+║         MINECRAFT SERVER AUDIT REPORT & CLONE STATUS          ║
+║                  Generated: 2026-06-10 10:30 UTC              ║
+╚════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1️⃣ SYSTEMD SERVICES (6 TOTAL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ minecraft.service              [RUNNING] (PID 519330)
+  └─ 1.1GB RAM, 2GB heap (-Xmx2G)
+  └─ Paper 1.21.11 build 131
+  └─ User: minecraft
+  └─ Uptime: 3h 57min
+
+✓ mc-tgbridge.service            [RUNNING]
+  └─ Telegram bot bridge
+  └─ User: root
+  └─ Env: /opt/minecraft/.env
+
+✓ mc-web.service                 [CONFIGURED]
+  └─ Web portal (port 8090)
+  └─ User: minecraft
+  └─ Serving: /opt/minecraft/web/
+
+✓ afk-bot.service                [CONFIGURED]
+  └─ AFKBot (Overworld AFK)
+  └─ User: minecraft
+  └─ Deps: minecraft.service
+  └─ Location: x=0, y=65, z=0
+
+✓ afk-bot2.service               [CONFIGURED]
+  └─ AFKBot2 (Nether AFK)
+  └─ User: minecraft
+  └─ Deps: minecraft.service, afk-bot.service
+  └─ Location: x=254, y=243, z=90 (Nether)
+
+✓ minecraft-api.service          [RUNNING] (PID 519332)
+  └─ Status API server
+  └─ User: minecraft
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2️⃣ CONFIGURATION FILES ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ /opt/minecraft/.env
+  ├─ TG_TOKEN: Present
+  ├─ TG_CHAT_ID: -1001914112188 (Forum)
+  ├─ RCON_PASSWORD: Set
+  ├─ WEB_PORT: 8090
+  └─ BACKUP_DIR: /opt/minecraft/backups
+
+✓ /opt/minecraft/server-2/server.properties
+  ├─ enable-rcon: true
+  ├─ rcon.port: 25575
+  └─ rcon.password: Set
+
+✓ /opt/minecraft/whitelist.json: 6 players
+✓ /opt/minecraft/ops.json: Sodiq (Level 4), AFKBot (Level 4)
+✓ /opt/minecraft/eula.txt: ACCEPTED
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3️⃣ PYTHON SCRIPTS ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ api_server.py        (3.0K) [Status API]
+✓ tg_bridge.py         (33K)  [Telegram Bot Bridge - RUNNING]
+✓ web_server.py        (11K)  [Web Portal Server]
+
+Dependencies:
+  ✓ python3, python3-pip
+  ✓ mcrcon (RCON client)
+  ✓ python-telegram-bot (TG API)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4️⃣ NODEJS BOTS ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ /opt/minecraft/node/bin/node [PRESENT]
+
+AFKBot (Overworld):
+  ├─ afk-bot.js [READY]
+  ├─ package.json [mineflayer ^4.37.1, pathfinder ^2.4.5]
+  ├─ node_modules [412M]
+  └─ .env: BOT_USERNAME=AFKBot, X=0, Y=65, Z=0
+
+AFKBot2 (Nether):
+  ├─ afk-bot.js [READY - with zombified piglin farming]
+  ├─ package.json [same dependencies]
+  ├─ node_modules [412M]
+  └─ .env: BOT_USERNAME=AFKBot2, X=254, Y=243, Z=90
+
+Features:
+  ✓ Auto-authentication & register
+  ✓ Anti-AFK rotation (30s)
+  ✓ Path finding (movement)
+  ✓ AFKBot2: Piglin farm integration
+  ✓ Auto-reconnect with backoff
+  ✓ Graceful shutdown
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5️⃣ WEB PORTAL ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ /opt/minecraft/web/ (132K)
+  ├─ index.html (28.9KB) - Premium landing
+  ├─ dashboard.html (19.6KB) - Live stats
+  └─ Tailwind CSS, Glassmorphism, Neon glow
+
+Features:
+  ✓ Real-time player tracking
+  ✓ Performance charts
+  ✓ Smooth animations
+  ✓ Mobile responsive
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6️⃣ BACKUPS & RETENTION ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ /opt/minecraft/backups/ (1012M, 3 recent)
+  ├─ minecraft-2026-06-08_03-00-01.zip (338M)
+  ├─ minecraft-2026-06-09_03-00-01.zip (338M)
+  └─ minecraft-2026-06-10_03-00-01.zip (338M)
+
+✓ backup.sh
+  ├─ Stops minecraft service
+  ├─ Creates zip (world + config)
+  ├─ Uploads to Google Drive (rclone)
+  ├─ Auto-deletes 7+ day backups
+  └─ Restarts service
+
+✓ Cron: 0 3 * * * (daily 3 AM)
+✓ Google Drive: rclone gdrive:minecraft-backups/
+✓ Retention: 7 days
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7️⃣ STORAGE BREAKDOWN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+server-2/        1.6G  (World + plugins + config)
+backups/         1.0G  (3 recent backups)
+afk-bot/         412M  (Bot + node_modules)
+afk-bot2/        412M  (Bot + node_modules)
+web/             132K  (Portal assets)
+Scripts/config   ~10M  (Python, .sh, .env)
+                 ─────
+TOTAL            3.5GB
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8️⃣ SETUP AUTOMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ setup.sh (9.5K)
+  ├─ Java, Python, rclone installation
+  ├─ Directory structure
+  ├─ Paper server download
+  ├─ EULA acceptance
+  ├─ RCON & plugins
+  ├─ Systemd service creation
+  ├─ Backup setup
+  └─ Full automation with env vars
+
+Environment Variables:
+  ✓ TG_TOKEN, TG_CHAT_ID, RCON_PASSWORD
+  ✓ ADMIN_IDS, TOPIC IDs
+  ✓ AUTO_RCLONE (skip interactive setup)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9️⃣ CLONE READINESS ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ All scripts present & executable
+✓ All configs complete (no missing values)
+✓ All dependencies installed
+✓ Services properly configured with deps
+✓ Node.js binary ready
+✓ Both bots fully configured
+✓ Backup system tested & working
+✓ Web portal ready
+✓ Cron backup automated
+✓ File permissions correct
+
+📋 Detailed Guide: /opt/minecraft/CLONE_GUIDE.md
+
+╔════════════════════════════════════════════════════════════════╗
+║ 🟢 SERVER 100% READY FOR CLONE & NEW DEPLOYMENT               ║
+╚════════════════════════════════════════════════════════════════╝
+
+Quick Clone Steps:
+1. tar czf minecraft-backup.tar.gz /opt/minecraft/
+2. Transfer to new server
+3. Extract: tar xzf minecraft-backup.tar.gz -C /
+4. Fix perms: chown -R minecraft:minecraft /opt/minecraft
+5. systemctl daemon-reload
+6. systemctl start minecraft.service
+7. Wait 30s, start other services
+
+See CLONE_GUIDE.md for detailed steps and verification!
