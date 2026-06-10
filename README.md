@@ -1,415 +1,141 @@
-# 🎮 Minecraft Paper + Telegram Bot
+# Minecraft Server
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
-[![Paper 1.21.11](https://img.shields.io/badge/Paper-1.21.11-brightgreen)](https://papermc.io/)
-[![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-blue?logo=telegram)](https://telegram.org/)
+Paper 1.21.11 production server with Telegram notifications and auto backups.
 
-Complete, production-ready Minecraft server with **Telegram bot integration**, **automated backups**, and **secure player authentication**.
+## Setup (5 minutes)
 
-**⚡ Key Features:**
-- 🎮 Paper 1.21.11 Minecraft server
-- 🔐 AuthMe authentication with GUI login
-- 💬 Bidirectional Telegram chat bridge
-- 📦 Automated daily backups to Google Drive
-- 🤖 Server management via Telegram commands
-- 🔧 One-click setup with `setup.sh`
-- 📚 Comprehensive documentation & guides
-
----
-
-## 🚀 Quick Start
-
-### **Option 1: Automated Setup (Recommended)**
 ```bash
-sudo su
-mkdir -p /opt/minecraft && cd /opt/minecraft
-git clone https://github.com/YOUR_REPO/minecraft-telegram-bot.git .
-chmod +x scripts/setup.sh
-./scripts/setup.sh
+# 1. Clone repo
+git clone https://github.com/TrueSurvival/server.git /opt/minecraft
+cd /opt/minecraft
+
+# 2. Setup environment
+cp .env.example .env
+# Edit .env with your Telegram token, RCON password, etc.
+
+# 3. Start server
+sudo systemctl start minecraft mc-tgbridge mc-web afk-bot afk-bot2
+
+# 4. Check status
+sudo systemctl status minecraft
 ```
 
-**Setup script will:**
-- Install Java, Python, dependencies
-- Download Paper 1.21.11
-- Setup AuthMe plugin
-- Configure Telegram bot
-- Create systemd services
-- Start server automatically
+## What's Running
 
-⏱️ **Time:** ~2-3 minutes | 📝 **Prompts:** 5 interactive questions
+| Service | What it does | Port |
+|---------|-------------|------|
+| minecraft | Game server | 25565 |
+| mc-tgbridge | Telegram notifications | - |
+| mc-web | Web dashboard | 8090 |
+| afk-bot | Anti-AFK bot | 25565 |
+| afk-bot2 | Anti-AFK bot #2 | 25565 |
 
-### **Option 2: Fully Automatic (CI/CD Ready)**
+## Files & Folders
+
+```
+server-2/          - Game world and server configs
+backups/           - Daily backups (auto at 3 AM)
+afk-bot/           - Bot code
+web/               - Web dashboard (http://localhost:8090)
+api_server.py      - Stats API
+tg_bridge.py       - Telegram integration
+backup.sh          - Backup script
+.env               - Your credentials (don't commit this)
+```
+
+## Configure
+
+Edit `.env`:
+```
+TG_TOKEN=your_bot_token
+TG_CHAT_ID=your_forum_id
+RCON_PASSWORD=server_rcon_password
+BOT_NAME=AFKBot
+BOT_PASSWORD=bot_password
+```
+
+## Logs & Monitoring
+
 ```bash
-export TG_TOKEN="your_token" TG_CHAT_ID="-1001234567890" \
-       ADMIN_IDS="123456789" RCON_PASSWORD="password" AUTO_RCLONE="skip"
+# Server logs
+tail -f server-2/logs/latest.log
 
-sudo -E bash scripts/setup.sh
+# Telegram bridge status
+sudo journalctl -u mc-tgbridge -f
+
+# Bot status
+ps aux | grep afk-bot
 ```
 
-**Zero user interaction - perfect for:**
-- Docker containers
-- Kubernetes deployments
-- GitHub Actions CI/CD
-- Infrastructure-as-Code
+## Backup
 
-See [AUTOMATIC_SETUP.md](AUTOMATIC_SETUP.md) for full details.
-
-### **Option 3: Manual Setup**
-See [📘 docs/QUICK_START.md](docs/QUICK_START.md) for step-by-step instructions.
-
----
-
-## 📋 Requirements
-
-- **OS:** Ubuntu 20.04+ or Debian 11+
-- **CPU:** 2+ cores
-- **RAM:** 2GB+ (4GB recommended)
-- **Disk:** 5GB+ (for backups)
-- **Java:** OpenJDK 21+
-- **Telegram:** Bot token (from [@BotFather](https://t.me/botfather))
-- **Google Account:** (for backup storage)
-
----
-
-## 🎮 Features
-
-### **Paper Minecraft Server**
-- Latest Paper 1.21.11 build
-- Optimized Java flags (G1GC)
-- Performance plugins (optional)
-- Full vanilla compatibility
-
-### **AuthMe Authentication**
-- Secure password-based login
-- Beautiful GUI dialog (Minecraft 1.21.11+)
-- Email recovery system
-- Player data protection
-- SQLite database
-
-### **Telegram Bot Commands**
-
-| Command | Permission | Description |
-|---------|-----------|-------------|
-| `/online` | Public | Show online players |
-| `/status` | Public | Server status & TPS |
-| `/tps` | Public | TPS & MSPT metrics |
-| `/health` | Admin | Disk, memory, backup status |
-| `/server <start\|stop\|restart>` | Admin | Control server |
-| `/backup` | Admin | Manual backup |
-| `/logs [n]` | Admin | Last n log lines |
-| `/mc <command>` | Admin | Direct RCON command |
-| `/kick <nick>` | Admin | Kick player |
-| `/ban <nick>` | Admin | Ban player |
-| `/op <nick>` | Admin | Give OP |
-
-### **Chat Bridge**
-- ✅ Minecraft chat → Telegram
-- ✅ Telegram messages → Minecraft  
-- ✅ Smart coordinate detection
-- ✅ Filtered logs in separate topic
-- ✅ Per-player message formatting
-
-### **Automated Backups**
-- ⏰ Daily at 3:00 AM (configurable)
-- 📦 Full world + config backup
-- ☁️ Upload to Google Drive
-- 🗑️ Auto-delete old backups (7+ days)
-- 📊 Backup status in Telegram
-
-### **Auto-Restart & Monitoring**
-- 🔄 systemd service auto-restart on crash
-- 📝 Persistent logging
-- 🔔 Telegram notifications
-- 🛡️ Graceful shutdown handling
-
----
-
-## 📁 Project Structure
-
-```
-.
-├── README.md                      # This file
-├── LICENSE                        # MIT License
-├── CONTRIBUTING.md                # Contribution guidelines
-├── ARCHITECTURE.md                # System design
-├── .gitignore                    # Git exclusions
-│
-├── docs/                         # Documentation
-│   ├── QUICK_START.md           # 10-minute setup
-│   ├── README.md                # Full reference
-│   ├── TROUBLESHOOTING.md       # Common issues
-│   └── MIGRATION.md             # Deploy to new server
-│
-├── scripts/                      # Executable scripts
-│   ├── setup.sh                 # One-click installer
-│   └── backup.sh                # Backup automation
-│
-├── templates/                    # Configuration templates
-│   └── .env.example             # Environment template
-│
-└── src/                         # Source code
-    └── tg_bridge.py             # Main Telegram bot
-```
-
-### 🚫 Not in Git (Security)
-```
-/opt/minecraft/
-├── .env                  # Secrets (RCON password, bot token)
-├── server-2/             # Active server (running)
-└── backups/              # Backup archives
-```
-
----
-
-## ⚙️ Configuration
-
-All configuration via single `.env` file:
-
-```env
-# Telegram
-TG_TOKEN=your_bot_token_here
-TG_CHAT_ID=-1001234567890
-CHAT_TOPIC_ID=6
-LOG_TOPIC_ID=9555
-ADMIN_IDS=123456789
-
-# Minecraft RCON
-RCON_HOST=localhost
-RCON_PORT=25575
-RCON_PASSWORD=secure_password
-
-# Server
-LOG_FILE=/opt/minecraft/server-2/logs/latest.log
-MINECRAFT_SERVICE=minecraft
-
-# Backup
-BACKUP_SCRIPT=/opt/minecraft/scripts/backup.sh
-BACKUP_DIR=/opt/minecraft/backups
-BACKUP_REMOTE=gdrive:minecraft-backups/
-BACKUP_RETENTION_DAYS=7
-```
-
-See [📘 docs/README.md](docs/README.md) for complete configuration reference.
-
----
-
-## 🚨 Troubleshooting
-
-### Bot not responding?
 ```bash
-systemctl status mc-tgbridge.service
-journalctl -u mc-tgbridge.service -n 20
+# Manual backup
+bash backup.sh
+
+# View backups
+ls -lh backups/
+
+# Restore (extract and replace server-2)
+unzip backups/minecraft-2026-06-10_03-00-01.zip
 ```
 
-### Server won't start?
+## Web Dashboard
+
+Open http://localhost:8090 to see:
+- Online players
+- Server stats (TPS, memory)
+- World info
+- Live logs
+
+## Players & Whitelist
+
+Add players to `server-2/whitelist.json`:
+```json
+[
+  {"name": "PlayerName", "uuid": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"}
+]
+```
+
+## Troubleshooting
+
+**Server won't start**
 ```bash
-tail -50 /opt/minecraft/server-2/logs/latest.log
-systemctl status minecraft.service
+sudo journalctl -u minecraft -n 50
+# Check: java -version
+# Check port: sudo netstat -tlnp | grep 25565
 ```
 
-### Backup failing?
+**Bots not joining**
 ```bash
-/opt/minecraft/scripts/backup.sh
-tail -20 /var/log/minecraft-backup.log
+cat server-2/whitelist.json | grep -i afk
+# Re-add: /whitelist add AFKBot
 ```
 
-**Full troubleshooting guide:** [🔧 docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-
----
-
-## 📚 Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [📘 docs/QUICK_START.md](docs/QUICK_START.md) | 10-minute setup guide |
-| [📖 docs/README.md](docs/README.md) | Complete reference |
-| [🔧 docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Problem solving |
-| [🏗️ ARCHITECTURE.md](ARCHITECTURE.md) | System design & flow |
-| [🔄 docs/MIGRATION.md](docs/MIGRATION.md) | New server deployment |
-| [🤝 CONTRIBUTING.md](CONTRIBUTING.md) | Development guide |
-
----
-
-## 🔐 Security
-
-✅ **Security Features:**
-- Secrets in `.env` (gitignored, chmod 600)
-- RCON localhost-only (not exposed)
-- Telegram admin verification
-- No credentials in logs
-- Password encryption (SHA256/BCrypt)
-- Guild ID verification in bot
-
-⚠️ **Best Practices:**
-- Keep `.env` file secure
-- Use strong RCON password
-- Restrict admin IDs to trusted users
-- Regularly backup to external storage
-- Use firewall to limit port access
-
----
-
-## 🛠️ Advanced Setup
-
-### Multiple Servers
-Deploy identical setup to multiple machines:
+**Telegram not working**
 ```bash
-# Server 1
-git clone ... /opt/minecraft
-./scripts/setup.sh
-
-# Server 2
-git clone ... /opt/minecraft
-./scripts/setup.sh
-# (Use different RCON_PASSWORD, TG_CHAT_ID per server)
+# Test: curl https://api.telegram.org/bot{YOUR_TOKEN}/getMe
 ```
 
-### Docker (Coming Soon)
+**Backup failed**
 ```bash
-docker build -t minecraft-bot .
-docker run -d --name minecraft -p 25565:25565 \
-  -v /opt/minecraft/.env:/.env \
-  minecraft-bot
+bash backup.sh
+# Or check: rclone ls gdrive:minecraft-backups/
 ```
 
-### Performance Tuning
-- Adjust `-Xmx4G` in systemd service for more RAM
-- Tune Bukkit server.properties
-- Use performance plugins (Lithium, Sodium)
+## Performance
 
-See [🏗️ ARCHITECTURE.md](ARCHITECTURE.md#performance-considerations)
+- World: 1.6 GB
+- Backups: 338 MB each
+- Memory: 8-10 GB
+- TPS: 20.0 (no lag)
 
----
+## More Info
 
-## 📊 System Architecture
-
-```
-Minecraft Server ◄──RCON──► Telegram Bot
-       │                          │
-       ▼                          ▼
-   AuthMe Plugin          Chat Bridge
-    (GUI Login)           (Message relay)
-       │                          │
-       └──────────┬───────────────┘
-                  │
-           ┌──────▼───────┐
-           │ Backup System│
-           │(Daily 3:00AM)│
-           └──────┬───────┘
-                  │
-            Google Drive
-           (Cloud Storage)
-```
-
-Full architecture details: [🏗️ ARCHITECTURE.md](ARCHITECTURE.md)
+- **CLONE_GUIDE.md** - Full deployment steps
+- **CLONE_QUICK_COMMANDS.md** - Bash reference
+- **AUDIT_REPORT.txt** - Complete infrastructure audit
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! See [🤝 CONTRIBUTING.md](CONTRIBUTING.md) for:
-- Bug reporting
-- Feature requests  
-- Code style guidelines
-- PR process
-- Development setup
-
-### Ways to Contribute:
-- 🐛 Report bugs
-- ✨ Suggest features
-- 📖 Improve documentation
-- 💻 Submit code/fixes
-- 🧪 Add tests
-- 🌍 Translate
-
----
-
-## 📈 Project Status
-
-| Component | Status |
-|-----------|--------|
-| Minecraft Server | ✅ Production Ready |
-| Telegram Bot | ✅ Production Ready |
-| AuthMe Plugin | ✅ Production Ready |
-| Backup System | ✅ Production Ready |
-| Setup Script | ✅ Fully Automated |
-| Documentation | ✅ Complete |
-| Tests | 🔶 In Progress |
-| Docker | 🔶 Planned |
-
----
-
-## 📦 Dependencies
-
-### Server
-- **Paper 1.21.11** - Minecraft server
-- **AuthMe** - Authentication plugin
-- **OpenJDK 21** - Java runtime
-
-### Bot
-- **python-telegram-bot** - Telegram integration
-- **mcrcon** - RCON client
-- **rclone** - Cloud backup
-
-### Infrastructure
-- **systemd** - Service management
-- **rclone** - Google Drive sync
-- **cron** - Task scheduling
-
-See `scripts/setup.sh` for full installation commands.
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for details.
-
----
-
-## 📞 Support
-
-- 📖 **Documentation:** Check [docs/](docs/) folder
-- 🐛 **Bug Reports:** [GitHub Issues](../../issues)
-- 💡 **Feature Requests:** [GitHub Discussions](../../discussions)
-- 💬 **Questions:** [GitHub Discussions](../../discussions)
-
----
-
-## 🎉 Acknowledgments
-
-Built with:
-- [Paper MC](https://papermc.io/) - Minecraft server
-- [AuthMe](https://github.com/AuthMe/AuthMeReloaded) - Authentication
-- [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot) - Bot framework
-- [rclone](https://rclone.org/) - Cloud sync
-
----
-
-## 🚀 Roadmap
-
-### v1.0 (Current)
-- ✅ Core server + bot
-- ✅ AuthMe login
-- ✅ Chat bridge
-- ✅ Backup system
-- ✅ Documentation
-
-### v1.1 (Planned)
-- 🔶 Player whitelist management via Telegram
-- 🔶 Server stats dashboard
-- 🔶 Multi-language support
-- 🔶 Performance improvements
-
-### v2.0 (Future)
-- 🔲 Docker containerization
-- 🔲 Web admin panel
-- 🔲 Discord alternative
-- 🔲 Multiple server dashboard
-
----
-
-**Last Updated:** 2026-05-16  
-**Maintained by:** The Community
-
-⭐ If you find this useful, please give it a star! [⭐ Star us on GitHub](../../)
+Last updated: June 10, 2026 | Status: Running
